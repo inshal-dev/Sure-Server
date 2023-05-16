@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const data = require('./data/productData.json');
 const path = './data/productData.json';
 const cartData = require('./data/cartData.json');
+const addressList = require('./data/addressData.json');
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -181,7 +182,38 @@ app.post('/productComments', async(req, res)=>{
     }
 })
 
+//Address storing
 
+app.post('/user-address', async(req, res)=>{
+    try{
+        const location = req.body
+        const addressData = addressList
+        console.log(location)
+        addressData.push(location)
+
+        console.log(addressData)
+        if(location){
+            await writeFile('./data/addressData.json', JSON.stringify(addressData), 'utf8', ()=> console.log('address added'))
+            res.send('Address added').status(200)
+        }
+    }catch{
+        res.send('check error').status(400)
+
+    }
+})
+
+//Get Address
+
+app.get('/address', async(req, res)=>{
+    try{
+        const addressData = addressList;
+        if(addressData != ''){
+            res.send(addressData).status(200)
+        }
+    }catch{
+        res.send('Error').status(400)
+    }
+})
 
 
 let PORT = process.env.PORT || 3000;

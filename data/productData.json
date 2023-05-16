@@ -1,11 +1,11 @@
 [
     {
-        "productName": "SwissStyle",
+        "productName": "Rado",
         "product_id": "1e0",
         "productImagePath": "../assets/fossil.jpg",
-        "productPrice": "120000",
-        "productDiscount": "20%",
-        "productDescription": "Analog",
+        "productPrice": "210000",
+        "productDiscount": 20,
+        "productDescription": "Discover elegant, ceramic watches",
         "productCreatedDate": "04 May 2023"
     },
     {
@@ -13,7 +13,7 @@
         "product_id": "2e0",
         "productImagePath": "/assets/timex.webp",
         "productPrice": "20000",
-        "productDiscount": "10%",
+        "productDiscount":  10 ,
         "productDescription": "Black dial, Blue leather strap",
         "productCreatedDate": "04 May 2023"
     },
@@ -22,7 +22,7 @@
         "product_id": "3e0",
         "productImagePath": "",
         "productPrice": "10999",
-        "productDiscount": "5%",
+        "productDiscount": 5,
         "productDescription": "Black Metal Strap",
         "productCreatedDate": "02 May 2023"
     },
@@ -49,7 +49,7 @@
         "product_id": "6e0",
         "productImagePath": ".",
         "productPrice": "5000",
-        "productDiscount": "35%",
+        "productDiscount": 35,
         "productDescription": "Green Dial, Black strap",
         "productCreatedDate": "01 May 2023"
     }
