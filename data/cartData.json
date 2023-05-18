@@ -1,1 +1,32 @@
-[{"productName":"Rado","product_id":"1e0","productImagePath":"../assets/fossil.jpg","productPrice":"210000","productDiscount":20,"productDescription":"Discover elegant, ceramic watches","productCreatedDate":"04 May 2023","productQuantity":1},{"productName":"Tommy Hilfiger","product_id":"2e0","productImagePath":"/assets/timex.webp","productPrice":"20000","productDiscount":10,"productDescription":"Black dial, Blue leather strap","productCreatedDate":"04 May 2023","productQuantity":1},{"productName":"Titan","product_id":"3e0","productImagePath":"","productPrice":"10999","productDiscount":5,"productDescription":"Black Metal Strap","productCreatedDate":"02 May 2023","productQuantity":1}]
+[
+    {
+        "productName": "Rado",
+        "product_id": "1e0",
+        "productImagePath": "../assets/fossil.jpg",
+        "productPrice": "210000",
+        "productDiscount": 20,
+        "productDescription": "Discover elegant, ceramic watches",
+        "productCreatedDate": "04 May 2023",
+        "productQuantity": 1
+    },
+    {
+        "productName": "Titan",
+        "product_id": "3e0",
+        "productImagePath": "",
+        "productPrice": "10999",
+        "productDiscount": 5,
+        "productDescription": "Black Metal Strap",
+        "productCreatedDate": "02 May 2023",
+        "productQuantity": 1
+    },
+    {
+        "productName": "Titan",
+        "product_id": "3e0",
+        "productImagePath": "",
+        "productPrice": "10999",
+        "productDiscount": 5,
+        "productDescription": "Black Metal Strap",
+        "productCreatedDate": "02 May 2023",
+        "productQuantity": 1
+    }
+]

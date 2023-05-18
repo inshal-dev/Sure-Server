@@ -5,8 +5,11 @@ const dotenv = require('dotenv');
 const data = require('./data/productData.json');
 const path = './data/productData.json';
 const cartData = require('./data/cartData.json');
+const cityList = require('./data/cities.json')
 const addressList = require('./data/addressData.json');
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser'); 
+
+
 
 const app = express();
 app.use(express.static('public'));
@@ -17,7 +20,8 @@ app.use(cors({
 app.use(express.static(__dirname + '/public'));
 
 app.use(bodyParser.urlencoded({
-   extended: false
+   extended: true
+
 }));
 
 app.use(bodyParser.json());
@@ -169,6 +173,45 @@ app.get('/cart-item', async(req, res)=>{
     }
 })
 
+//BuyNow API
+app.post('/buy-now', async(req, res)=>{
+    try{
+        const cartList = cartData;
+        const cartItem = req.body.item;
+        let item;
+        let idCheck = false
+         for(let i = 0; i<= cartList.length; i++){ 
+            console.log(cartList[i].product_id);
+            if(cartList[i].product_id === cartItem.product_id){
+                this.idCheck = true
+                console.log(this.idCheck);
+            }
+            return 0;
+
+        }
+        if(cartList.length == 0){
+            cartItem.productQuantity = 1;
+            cartList.push(cartItem)
+           await writeFile('./data/cartData.json', JSON.stringify(cartList), 'utf8', ()=> console.log('Line 185: New Item add to cart for BuyNow'))
+         }else if(cartList.length >=1){
+            console.log(idCheck);
+             if(!idCheck){
+                cartItem.productQuantity = 1;
+                cartList.push(cartItem)
+               await writeFile('./data/cartData.json', JSON.stringify(cartList), 'utf8', ()=> console.log('Line 196: New Item add to cart for BuyNow'))
+            }else{
+                console.log('id');
+                return idCheck = false
+            }
+        }
+        res.send('Item Added to Cart').status(200)
+
+    }catch{
+        let ERROR = 'error'
+        res.send(ERROR).status(400)
+    }
+})
+
 
 //API for comments
 
@@ -186,12 +229,10 @@ app.post('/productComments', async(req, res)=>{
 
 app.post('/user-address', async(req, res)=>{
     try{
-        const location = req.body
+        const location = req.body.item;
         const addressData = addressList
-        console.log(location)
-        addressData.push(location)
-
-        console.log(addressData)
+        location.id = 100 + Math.random() 
+        addressData.push(location) 
         if(location){
             await writeFile('./data/addressData.json', JSON.stringify(addressData), 'utf8', ()=> console.log('address added'))
             res.send('Address added').status(200)
@@ -213,6 +254,22 @@ app.get('/address', async(req, res)=>{
     }catch{
         res.send('Error').status(400)
     }
+})
+
+//delete address}
+// app.post('/remove-address', async(req, res)=>{
+//     try{
+//         const addressData = addressList;
+//         const addressId = req.body.id;
+
+//     }catch{
+
+//     }
+// })
+//send cities 
+app.get('/cities', async(req, res)=>{
+    const city = cityList;  
+    res.send(city.cities).status(200)
 })
 
 
