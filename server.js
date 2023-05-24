@@ -5,7 +5,8 @@ const dotenv = require('dotenv');
 const data = require('./data/productData.json');
 const path = './data/productData.json';
 const cartData = require('./data/cartData.json');
-const cityList = require('./data/cities.json')
+const cityList = require('./data/cities.json');
+const userCart = require('./data/product_cart_data.json');
 const addressList = require('./data/addressData.json');
 const bodyParser = require('body-parser'); 
 
@@ -160,12 +161,10 @@ app.post('/cart-remove-item', async (req, res)=>{
 
 app.get('/cart-item', async(req, res)=>{
     try{
-        if(cartData){
-            
+        if(cartData){ 
             let cart = cartData.sort((a,b)=>{
                 return a.product_id < b.product_id ? -1 : 1;
-            })
-      
+            }) 
             res.send(cart);
         }
     }catch{
@@ -178,33 +177,22 @@ app.post('/buy-now', async(req, res)=>{
     try{
         const cartList = cartData;
         const cartItem = req.body.item;
-        let item;
-        let idCheck = false
-         for(let i = 0; i<= cartList.length; i++){ 
-            console.log(cartList[i].product_id);
-            if(cartList[i].product_id === cartItem.product_id){
-                this.idCheck = true
-                console.log(this.idCheck);
-            }
-            return 0;
-
-        }
-        if(cartList.length == 0){
+        // if(cartList.includes(cartItem.product_id)){
+        //   res.send('Data exists');
+        //  }else{ 
+        //     cartItem.productQuantity = 1;
+        //     cartList.push(cartItem)
+        //     await writeFile('./data/cartData.json', JSON.stringify(cartList), 'utf8', ()=> console.log('Line 196: New Item add to cart for BuyNow'))
+        // }
+        let item = cartList.find(el => el.product_id == cartItem.product_id)
+        if(item){
+            res.send('Data exists');
+        }else{
+            console.log('Line 192: productQuantity not exist');
             cartItem.productQuantity = 1;
             cartList.push(cartItem)
-           await writeFile('./data/cartData.json', JSON.stringify(cartList), 'utf8', ()=> console.log('Line 185: New Item add to cart for BuyNow'))
-         }else if(cartList.length >=1){
-            console.log(idCheck);
-             if(!idCheck){
-                cartItem.productQuantity = 1;
-                cartList.push(cartItem)
-               await writeFile('./data/cartData.json', JSON.stringify(cartList), 'utf8', ()=> console.log('Line 196: New Item add to cart for BuyNow'))
-            }else{
-                console.log('id');
-                return idCheck = false
-            }
+            writeFile('./data/cartData.json', JSON.stringify(cartList), 'utf8', ()=> console.log('Line 196: New Item add to cart for BuyNow'))
         }
-        res.send('Item Added to Cart').status(200)
 
     }catch{
         let ERROR = 'error'
@@ -216,12 +204,8 @@ app.post('/buy-now', async(req, res)=>{
 //API for comments
 
 app.post('/productComments', async(req, res)=>{
-    try{
-
-
-
-    }catch{
-
+    try{ 
+    }catch{ 
     }
 })
 
@@ -229,9 +213,10 @@ app.post('/productComments', async(req, res)=>{
 
 app.post('/user-address', async(req, res)=>{
     try{
+        const date = new Date().getTime();
         const location = req.body.item;
         const addressData = addressList
-        location.id = 100 + Math.random() 
+        location.id = 100 + date + Math.random() 
         addressData.push(location) 
         if(location){
             await writeFile('./data/addressData.json', JSON.stringify(addressData), 'utf8', ()=> console.log('address added'))
@@ -243,8 +228,7 @@ app.post('/user-address', async(req, res)=>{
     }
 })
 
-//Get Address
-
+//Get Address 
 app.get('/address', async(req, res)=>{
     try{
         const addressData = addressList;
@@ -256,22 +240,75 @@ app.get('/address', async(req, res)=>{
     }
 })
 
-//delete address}
-// app.post('/remove-address', async(req, res)=>{
-//     try{
-//         const addressData = addressList;
-//         const addressId = req.body.id;
+//delete address
+app.post('/remove-address', async(req, res)=>{
+    try{
+        const addressData = addressList;
+        const addressId = req.body.id; 
+        let address;
+        addressData.find(el => { 
+           if(el.id === addressId){
+               address = el
+           }  
+        })  
+        console.log(address); 
+        if(address){
+            addressData.splice(addressData.indexOf(address), 1) 
+            await writeFile('./data/addressData.json', JSON.stringify(addressData), 'utf8', ()=> console.log('Address Removed'))
+            res.send('Address Removed').status(200)
+        }else{
+            console.log('Value is not removed');
+        }
+    }catch{
+        res.send('Error').status(400)
+    }
+})
 
-//     }catch{
+//update address 
+app.post('/update-address', async(req, res)=>{
+    try{
+        const addressData = addressList;
+        const updatedAddress = req.body.item;
+        addressData.splice(addressData.indexOf(updatedAddress), 1);
+        addressData.push(updatedAddress);
+        setTimeout(()=>{
+            writeFile('./data/addressData.json', JSON.stringify(addressData), 'utf8', ()=> console.log('Address Removed'))
+        }, 500)
+    }catch{
+        res.send('error').status(400)
+    }
+})
 
-//     }
-// })
+
+//user-cart-data  
+app.post('/cart-data', async(req, res)=>{
+    try{
+        const productData = req.body.productData;    
+        const userCartData = userCart;      
+        let productCart = {
+            product_detail : productData
+        } 
+        console.log(productData.length);
+        if(productData.length > 0){
+            console.log('Value is true');
+             userCartData = []
+
+             console.log(productCart);
+            userCartData.push(productCart)
+            console.log(userCartData);
+            await writeFile('./data/product_cart_data.json', JSON.stringify(userCartData), 'utf8', ()=> console.log('product Data added'))
+        }
+         res.send('data update on cart').status(200)
+    }catch{
+        res.send('Error').status(400)
+    }
+})
+
 //send cities 
 app.get('/cities', async(req, res)=>{
     const city = cityList;  
-    res.send(city.cities).status(200)
+    res.send(city).status(200)
 })
-
 
 let PORT = process.env.PORT || 3000;
 
