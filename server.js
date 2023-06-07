@@ -7,7 +7,10 @@ const path = './data/productData.json';
 const cartData = require('./data/cartData.json');
 const cityList = require('./data/cities.json');
 const userCart = require('./data/product_cart_data.json');
+const addressCart = require('./data/selectedData.json');
 const addressList = require('./data/addressData.json');
+const placedItem = require('./data/placed-item.json')
+
 const bodyParser = require('body-parser'); 
 
 
@@ -36,7 +39,8 @@ app.get('/', (req, res) => {
         res.send(data);
     }
     catch{
-        res.send('data not found');
+        message = 'Data not Found'
+        res.send(message);
     }
 });
 
@@ -50,7 +54,9 @@ app.post('/addData', (req, res) => {
         // appendFile('./data/productData.json', JSON.stringify(postData), 'utf8', ()=> console.log(JSON.stringify(data)))
         res.send(data).status(200);
     }catch{
-        res.send('Error').status(400);
+        message = 'Not able to add product'
+
+        res.send(message).status(400);
     } 
 });
 
@@ -98,13 +104,12 @@ app.post('/cart', async (req, res)=> {
         } 
         res.status(200).json(cartData)
     }
-    catch{
+    catch{ 
         res.send('Cart List not updated');
     }
 })
 
-//remove whole items from cart
-
+//remove whole items from cart 
 app.post('/cart-remove', async(req, res)=>{
     try{
         const delItem = await req.body.id;
@@ -126,8 +131,7 @@ app.post('/cart-remove', async(req, res)=>{
     }
 })
 
-//remove a product quantity from cart
-
+//remove a product quantity from cart 
 app.post('/cart-remove-item', async (req, res)=>{
     try{
         const itemId = req.body.product_id;
@@ -157,18 +161,18 @@ app.post('/cart-remove-item', async (req, res)=>{
     }
 })
 
-//get cart value
-
+//get cart value 
 app.get('/cart-item', async(req, res)=>{
-    try{
-        if(cartData){ 
+    try{ 
+        if(cartData){  
             let cart = cartData.sort((a,b)=>{
                 return a.product_id < b.product_id ? -1 : 1;
             }) 
             res.send(cart);
         }
     }catch{
-        res.send('Error').status(400)
+        msg = "ERROR"
+        res.send(msg).status(400)
     }
 })
 
@@ -209,8 +213,7 @@ app.post('/productComments', async(req, res)=>{
     }
 })
 
-//Address storing
-
+//Address storing 
 app.post('/user-address', async(req, res)=>{
     try{
         const date = new Date().getTime();
@@ -223,8 +226,7 @@ app.post('/user-address', async(req, res)=>{
             res.send('Address added').status(200)
         }
     }catch{
-        res.send('check error').status(400)
-
+        res.send('check error').status(400) 
     }
 })
 
@@ -260,7 +262,8 @@ app.post('/remove-address', async(req, res)=>{
             console.log('Value is not removed');
         }
     }catch{
-        res.send('Error').status(400)
+        msg = "Error";
+        res.send(msg).status(400)
     }
 })
 
@@ -275,7 +278,8 @@ app.post('/update-address', async(req, res)=>{
             writeFile('./data/addressData.json', JSON.stringify(addressData), 'utf8', ()=> console.log('Address Removed'))
         }, 500)
     }catch{
-        res.send('error').status(400)
+        msg = "Error"
+        res.send(msg).status(400)
     }
 })
 
@@ -283,27 +287,59 @@ app.post('/update-address', async(req, res)=>{
 //user-cart-data  
 app.post('/cart-data', async(req, res)=>{
     try{
-        const productData = req.body.productData;    
-        const userCartData = userCart;      
-        let productCart = {
-            product_detail : productData
-        } 
-        console.log(productData.length);
-        if(productData.length > 0){
-            console.log('Value is true');
-             userCartData = []
-
-             console.log(productCart);
-            userCartData.push(productCart)
-            console.log(userCartData);
-            await writeFile('./data/product_cart_data.json', JSON.stringify(userCartData), 'utf8', ()=> console.log('product Data added'))
-        }
+        const productDataItem = req.body.productData; 
+        await writeFile('./data/product_cart_data.json', JSON.stringify(productDataItem), 'utf8', ()=> console.log('Data Added'))
          res.send('data update on cart').status(200)
-    }catch{
-        res.send('Error').status(400)
+    }catch(error){ 
+        res.send(error).status(400)
     }
 })
 
+//select address data
+app.post('/selected-address', async(req, res)=>{
+    try{
+        const addressDataItem = req.body.addressData; 
+        await writeFile('./data/selectedData.json', JSON.stringify(addressDataItem), 'utf8', ()=> console.log('Data Added'))
+         res.send('data update on cart').status(200)
+    }catch(error){ 
+        res.send(error).status(400)
+    }
+})
+
+
+//get Address| product Data  
+app.get('/viewCart', async(req, res)=>{
+    try{
+        add = []
+        const addressData = addressCart;
+        const productData = userCart;
+        add = [ addressData ] 
+        res.send({productData, add}).status(200) 
+    }catch(err){
+        res.send(err).status(400)
+    }
+})
+
+//add payment type in product section
+app.post('/payment-option', async(req, res)=>{
+    try{
+        const paymentOption = req.body.type;
+        const productData = userCart;
+        const addressData = addressCart;
+        const placedItems = placedItem;
+        let placedItem = {
+            paymentMethod : paymentOption,
+            productDetails: productData,
+            addressDetails: addressData
+        }                                 
+        placedItems.push(placedItem)
+        
+        await writeFile('data/placed-item.json', JSON.stringify(placedItems), 'utf8', ()=> console.log('Data Added'))
+        res.send(placedItem).status(200)
+    }catch(err){
+        res.status(400)
+    }
+})
 //send cities 
 app.get('/cities', async(req, res)=>{
     const city = cityList;  

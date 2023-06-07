@@ -1,0 +1,27 @@
+[{
+    "paymentMethod": "UPI",
+    "productDetails": [
+        {
+            "productName": "Tommy Hilfiger",
+            "product_id": "2e0",
+            "productImagePath": "/assets/timex.webp",
+            "productPrice": "20000",
+            "productDiscount": 10,
+            "color": "Blue",
+            "category": "analog",
+            "productDescription": "Black dial, Blue leather strap",
+            "productCreatedDate": "04 May 2023",
+            "productQuantity": 1,
+            "productPriceDis": 18000
+        }
+    ],
+    "addressDetails": {
+        "firstLine": "30 G",
+        "secondLine": "Grand Street",
+        "landmark": "Kam",
+        "state": "Uttar Pradesh",
+        "city": "Kampil",
+        "pincode": "340021",
+        "id": 1684839555031.7725
+    }
+}]
